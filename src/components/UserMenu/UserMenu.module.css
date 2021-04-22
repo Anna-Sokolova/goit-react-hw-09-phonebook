@@ -1,0 +1,34 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  border-radius: 20px;
+}
+
+.name {
+  font-weight: 700;
+  margin-right: 12px;
+}
+
+.btn {
+  background-color: #ebebeb;
+  border: none;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  color: #404040;
+  cursor: pointer;
+  float: none;
+  font-weight: bold;
+  margin-left: 20px;
+  padding: 10px 5px;
+  font-family: inherit;
+  font-size: 16px;
+  -webkit-appearance: none;
+}
+
+.btn:hover {
+  background-color: #f8b2ef;
+}

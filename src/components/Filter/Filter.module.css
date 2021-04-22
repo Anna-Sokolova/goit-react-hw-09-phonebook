@@ -1,0 +1,26 @@
+.wrap {
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.labelFilter {
+  font-size: 18px;
+  text-decoration-line: underline;
+  color: #7b14af;
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+}
+
+.inputFilter {
+  display: block;
+  width: 100%;
+  padding: 0 15px;
+  margin: 10px 0 15px;
+  border-width: 0;
+  line-height: 40px;
+  border-radius: 20px;
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  font-family: 'Roboto', sans-serif;
+}

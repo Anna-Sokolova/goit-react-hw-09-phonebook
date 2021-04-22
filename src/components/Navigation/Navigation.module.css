@@ -1,0 +1,21 @@
+.nav {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+}
+
+.navList {
+  display: flex;
+}
+
+.NavLink {
+  display: inline-block;
+  text-decoration: none;
+  padding: 12px;
+  font-weight: 700;
+  color: #2a363b;
+}
+
+.NavLinkActive {
+  color: #e28bcc;
+}
