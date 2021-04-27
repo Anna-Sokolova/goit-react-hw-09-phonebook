@@ -1,9 +1,8 @@
 import React from 'react';
 import Title from '../../components/Title';
-import styles from './HomePage.module.css';
 
 const HomePage = () => (
-  <div className={styles.wrapper}>
+  <div className="wrapperHome">
     <Title title="Домашняя страница приложения">
       <span role="img" aria-label="Иконка тюльпан">
         🌷
