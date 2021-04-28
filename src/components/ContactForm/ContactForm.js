@@ -1,118 +1,104 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, { useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import operationsContact from '../../redux/contacts/contacts-operations';
 import selectorsContacts from '../../redux/contacts/contacts-selectors';
 import styles from './ContactForm.module.css';
 
-class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-  };
+export default function ContactForm() {
+  //useState
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  static defaultProps = {
-    name: '',
-    number: '',
-    state: [],
-  };
+  //useSelector as mapStateToProps
+  const contacts = useSelector(state =>
+    selectorsContacts.getAllContacts(state),
+  );
 
-  static propTypes = {
-    contacts: PropTypes.array,
-    onSubmit: PropTypes.func.isRequired,
-  };
+  //useDispatch
+  const dispatch = useDispatch();
+  const onSubmit = useCallback(
+    data => {
+      dispatch(operationsContact.addContact(data));
+    },
+    [dispatch],
+  );
 
-  handleInputChange = e => {
-    // console.log(event.currentTarget.name);
-    // console.log(event.currentTarget.value);
+  const handleInputChange = useCallback(e => {
+    // console.log(e.currentTarget.name);
+    // console.log(e.currentTarget.value);
     const { name, value } = e.currentTarget;
-    this.setState({ [name]: value });
+    name === 'name' ? setName(value) : setNumber(value);
+  }, []);
+
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+
+      if (name.trim() === '' || number.trim() === '') {
+        alert('Please enter valid information!');
+        reset();
+        return;
+      }
+
+      const findName = contacts.find(
+        contact => contact.name.toLowerCase() === name.toLowerCase(),
+      );
+
+      if (findName) {
+        alert(`${name} is already in contacts!`);
+        reset();
+        return;
+      }
+      onSubmit({ name, number });
+      reset();
+    },
+    [contacts, name, number, onSubmit],
+  );
+
+  const reset = () => {
+    setName('');
+    setNumber('');
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    // console.log(this.state);
+  return (
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <div className={styles.formField}>
+        <label className={styles.formLabel}>
+          Name
+          <input
+            className={styles.formInput}
+            type="text"
+            name="name"
+            pattern="[A-Za-zА-Яа-яЁё\s]{2,}"
+            placeholder="Enter name"
+            title="Введите данные о контакте, например Анна Соколова"
+            autoComplete="off"
+            value={name}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
 
-    if (this.state.name.trim() === '' || this.state.number.trim() === '') {
-      alert('Please enter valid information!');
-      this.reset();
-      return;
-    }
-    // console.log(this.props.contacts.items);
+        <label className={styles.formLabel}>
+          Number
+          <input
+            className={styles.formInput}
+            type="tel"
+            name="number"
+            pattern="[0-9\s]{10,}"
+            placeholder="Enter phone"
+            title="Введите номер телефона в формате 067 888 88 88 (не менее 10 цифр)"
+            autoComplete="off"
+            value={number}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
 
-    const findName = this.props.contacts.find(
-      contact => contact.name.toLowerCase() === this.state.name.toLowerCase(),
-    );
-
-    if (findName) {
-      alert(`${this.state.name} is already in contacts!`);
-      this.reset();
-      return;
-    }
-    this.props.onSubmit({ ...this.state });
-    this.reset();
-  };
-
-  reset = () => {
-    this.setState({
-      name: '',
-      number: '',
-    });
-  };
-  
-  render() {
-    const { name, number } = this.state;
-
-    return (
-      <form className={styles.form} onSubmit={this.handleSubmit}>
-        <div className={styles.formField}>
-          <label className={styles.formLabel}>
-            Name
-            <input
-              className={styles.formInput}
-              type="text"
-              name="name"
-              pattern="[A-Za-zА-Яа-яЁё\s]{2,}"
-              placeholder="Enter name"
-              title="Введите Имя и/или Имя и Фамилию"
-              autoComplete="off"
-              value={name}
-              onChange={this.handleInputChange}
-              required
-            />
-          </label>
-
-          <label className={styles.formLabel}>
-            Number
-            <input
-              className={styles.formInput}
-              type="tel"
-              name="number"
-              pattern="[0-9\s]{10,}"
-              placeholder="Enter phone"
-              title="Введите номер телефона в формате 067 888 88 88"
-              autoComplete="off"
-              value={number}
-              onChange={this.handleInputChange}
-              required
-            />
-          </label>
-
-          <button type="submit" className={styles.btnSubmit}>
-            Add contact
-          </button>
-        </div>
-      </form>
-    );
-  }
+        <button type="submit" className={styles.btnSubmit}>
+          Add contact
+        </button>
+      </div>
+    </form>
+  );
 }
-
-const mapStateToProps = state => ({
-  contacts: selectorsContacts.getAllContacts(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  onSubmit: data => dispatch(operationsContact.addContact(data)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
