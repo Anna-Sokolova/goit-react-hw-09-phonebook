@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Container from '../Container';
 import Navigation from '../Navigation';
 import AuthNav from '../AuthNav';
@@ -7,19 +7,18 @@ import UserMenu from '../UserMenu/UserMenu';
 import authSelectors from '../../redux/auth/auth-selectors';
 import styles from './AppBar.module.css';
 
-const AppBar = ({ isAuthenticated }) => (
-  <header className={styles.header}>
-    <Container>
-      <div className={styles.wrapper}>
-        <Navigation />
-        {isAuthenticated ? <UserMenu /> : <AuthNav />}
-      </div>
-    </Container>
-  </header>
-);
+export default function AppBar() {
+  //useSelector as mapStateToProps
+  const isAuthorized = useSelector(state => authSelectors.getAuthorized(state));
 
-const mapStateToProps = state => ({
-  isAuthenticated: authSelectors.getAuthenticated(state),
-});
-
-export default connect(mapStateToProps)(AppBar);
+  return (
+    <header className={styles.header}>
+      <Container>
+        <div className={styles.wrapper}>
+          <Navigation />
+          {isAuthorized ? <UserMenu /> : <AuthNav />}
+        </div>
+      </Container>
+    </header>
+  );
+}
