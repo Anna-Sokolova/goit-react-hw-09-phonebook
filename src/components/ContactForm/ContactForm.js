@@ -16,12 +16,6 @@ export default function ContactForm() {
 
   //useDispatch
   const dispatch = useDispatch();
-  const onSubmit = useCallback(
-    data => {
-      dispatch(operationsContact.addContact(data));
-    },
-    [dispatch],
-  );
 
   const handleInputChange = useCallback(e => {
     // console.log(e.currentTarget.name);
@@ -49,10 +43,13 @@ export default function ContactForm() {
         reset();
         return;
       }
-      onSubmit({ name, number });
+
+      // dispatch как замена onSubmit({ name, number });
+      dispatch(operationsContact.addContact({ name, number }));
+
       reset();
     },
-    [contacts, name, number, onSubmit],
+    [contacts, name, number, dispatch],
   );
 
   const reset = () => {

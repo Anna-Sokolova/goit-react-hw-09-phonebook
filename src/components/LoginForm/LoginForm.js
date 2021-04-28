@@ -1,99 +1,95 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Title from '../../components/Title';
 import Spinner from '../../components/Spinner';
 import operationsAuth from '../../redux/auth/auth-operations';
 import selectorsAuth from '../../redux/auth/auth-selectors';
 import styles from './LoginForm.module.css';
 
-class LoginForm extends Component {
-  state = {
-    email: '',
-    password: '',
-  };
+export default function LoginForm() {
+  //useState
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  handleChange = e => {
+  //useSelector as mapStateToProps
+  const isLoadingUser = useSelector(state => selectorsAuth.getLoading(state));
+
+  //useDispatch as mapDispatchToProps
+  const dispatch = useDispatch();
+
+  const handleInputChange = useCallback(e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    name === 'email' ? setEmail(value) : setPassword(value);
+  }, []);
+
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+
+      if (email.trim() === '' || password.trim() === '') {
+        alert('Please enter valid information!');
+        reset();
+        return;
+      }
+      // dispatch как замена onLogin({ email, password });
+      dispatch(operationsAuth.logIn({ email, password }));
+      reset();
+    },
+    [dispatch, email, password],
+  );
+
+  const reset = () => {
+    setEmail('');
+    setPassword('');
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
+  return (
+    <>
+      {isLoadingUser && <Spinner />}
+      {!isLoadingUser && (
+        <>
+          <Title title="Авторизация пользователя" />
+          <div className={styles.loginForm}>
+            <fieldset>
+              <form
+                onSubmit={handleSubmit}
+                className={styles.form}
+                autoComplete="off"
+              >
+                <label className={styles.label}>
+                  Почта
+                  <input
+                    className={styles.formInput}
+                    type="email"
+                    name="email"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </label>
 
-    if (this.state.email.trim() === '' || this.state.password.trim() === '') {
-      alert('Please enter valid information!');
-      this.reset();
-      return;
-    }
-    this.props.onLogin(this.state);
+                <label className={styles.label}>
+                  Пароль
+                  <input
+                    className={styles.formInput}
+                    type="password"
+                    name="password"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </label>
 
-    this.reset();
-  };
-
-  reset = () => {
-    this.setState({
-      email: '',
-      password: '',
-    });
-  };
-
-  render() {
-    const { email, password } = this.state;
-
-    return (
-      <>
-        {this.props.isLoadingUser && <Spinner />}
-        <Title title="Авторизация пользователя" />
-        <div className={styles.loginForm}>
-          <fieldset>
-            <form
-              onSubmit={this.handleSubmit}
-              className={styles.form}
-              autoComplete="off"
-            >
-              <label className={styles.label}>
-                Почта
-                <input
-                  className={styles.formInput}
-                  type="email"
-                  name="email"
-                  placeholder="Enter email"
-                  value={email}
-                  onChange={this.handleChange}
-                  required
-                />
-              </label>
-
-              <label className={styles.label}>
-                Пароль
-                <input
-                  className={styles.formInput}
-                  type="password"
-                  name="password"
-                  placeholder="Enter password"
-                  value={password}
-                  onChange={this.handleChange}
-                  required
-                />
-              </label>
-
-              <button type="submit" className={styles.btnSubmit}>
-                Войти
-              </button>
-            </form>
-          </fieldset>
-        </div>
-      </>
-    );
-  }
+                <button type="submit" className={styles.btnSubmit}>
+                  Войти
+                </button>
+              </form>
+            </fieldset>
+          </div>
+        </>
+      )}
+    </>
+  );
 }
-
-const mapStateToProps = state => ({
-  isLoadingUser: selectorsAuth.getLoading(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  onLogin: data => dispatch(operationsAuth.logIn(data)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

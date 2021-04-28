@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import authSelectors from '../../redux/auth/auth-selectors';
 import authOperations from '../../redux/auth/auth-operations';
@@ -11,10 +11,10 @@ export default function UserMenu() {
 
   //useDispatch as mapDispatchToProps
   const dispatch = useDispatch();
-  //используем useCallback для мемоизации функции
-  const onLogout = useCallback(() => {
+  //можно использовать useCallback для мемоизации функции onLogout!!
+  const onLogout = () => {
     dispatch(authOperations.logOut());
-  }, [dispatch]);
+  };
 
   return (
     <div className={styles.wrapper}>
