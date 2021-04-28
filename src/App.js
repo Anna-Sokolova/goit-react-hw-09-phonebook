@@ -28,6 +28,7 @@ const ContactsPage = lazy(() =>
 export default function App() {
   const dispatch = useDispatch();
 
+  //useEffect as ComponentDidMount, вызывается 1 раз при первом рендере
   useEffect(() => {
     dispatch(authOperations.getCurrentUser());
   }, [dispatch]);
