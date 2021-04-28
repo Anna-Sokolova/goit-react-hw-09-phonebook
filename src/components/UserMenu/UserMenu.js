@@ -11,6 +11,7 @@ export default function UserMenu() {
 
   //useDispatch as mapDispatchToProps
   const dispatch = useDispatch();
+  //используем useCallback для мемоизации функции
   const onLogout = useCallback(() => {
     dispatch(authOperations.logOut());
   }, [dispatch]);
