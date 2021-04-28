@@ -1,7 +1,7 @@
-const getAuthenticated = state => state.auth.isAuthenticated;
+const getAuthorized = state => state.auth.isAuthenticated;
 
 const getUserName = state => state.auth.user.name;
 
 const getLoading = state => state.auth.loading;
 
-export default { getAuthenticated, getUserName, getLoading };
+export default { getAuthorized, getUserName, getLoading };
