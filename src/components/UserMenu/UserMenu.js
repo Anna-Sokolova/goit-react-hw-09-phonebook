@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import authSelectors from '../../redux/auth/auth-selectors';
 import authOperations from '../../redux/auth/auth-operations';
 import defaultAvatar from './default-avatar.jpg'; //по-нормальному аватар будет приходить с бд и вытягивать его нужно будет через селектор типа getUserInfo
 import styles from './UserMenu.module.css';
-
 
 export default function UserMenu() {
   //useSelector as mapStateToProps
@@ -12,7 +11,9 @@ export default function UserMenu() {
 
   //useDispatch as mapDispatchToProps
   const dispatch = useDispatch();
-  const onLogout = () => dispatch(authOperations.logOut());
+  const onLogout = useCallback(() => {
+    dispatch(authOperations.logOut());
+  }, [dispatch]);
 
   return (
     <div className={styles.wrapper}>
