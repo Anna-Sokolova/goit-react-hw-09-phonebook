@@ -42,6 +42,8 @@ export default function App() {
           <Switch>
             <Route path={routes.home} exact component={HomePage} />
 
+            {/* теперь в этих раутах нет пропов Route - history, location, params, match
+                чтоб получить к ним доступ нужно использовать хуки раутеров */}
             <PublicRoute path={routes.login} restricted>
               <LoginPage />
             </PublicRoute>
