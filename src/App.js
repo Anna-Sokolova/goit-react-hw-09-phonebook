@@ -41,13 +41,18 @@ export default function App() {
         <Suspense fallback={<Spinner />}>
           <Switch>
             <Route path={routes.home} exact component={HomePage} />
-            <PublicRoute path={routes.login} restricted component={LoginPage} />
-            <PublicRoute
-              path={routes.register}
-              restricted
-              component={RegisterPage}
-            />
-            <PrivateRoute path={routes.contacts} component={ContactsPage} />
+
+            <PublicRoute path={routes.login} restricted>
+              <LoginPage />
+            </PublicRoute>
+
+            <PublicRoute path={routes.register} restricted>
+              <RegisterPage />
+            </PublicRoute>
+
+            <PrivateRoute path={routes.contacts}>
+              <ContactsPage />
+            </PrivateRoute>
           </Switch>
         </Suspense>
       </Container>
