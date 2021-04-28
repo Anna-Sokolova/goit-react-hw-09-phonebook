@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../components/Spinner';
 import Title from '../../components/Title';
 import ContactForm from '../../components/ContactForm';
@@ -8,32 +8,31 @@ import Filter from '../../components/Filter';
 import operationContacts from '../../redux/contacts/contacts-operations';
 import selectorsContacts from '../../redux/contacts/contacts-selectors';
 
-class ContactsPage extends Component {
-  componentDidMount() {
-    this.props.fetchAllContacts();
-  }
+export default function ContactsPage() {
+  //dispatchs as mapDispatchToProps
+  const dispatch = useDispatch();
 
-  render() {
-    return (
-      <>
-        <Title title="Phonebook" />
-        <ContactForm />
-        {this.props.contacts.length > 0 && <Title title="Contacts" />}
-        {this.props.contacts.length > 1 && <Filter />}
-        <ContactList />
-        {this.props.isloadingContacts && <Spinner />}
-      </>
-    );
-  }
+  //selectors as mapStateToProps
+  const contacts = useSelector(state =>
+    selectorsContacts.getAllContacts(state),
+  );
+  const isloadingContacts = useSelector(state =>
+    selectorsContacts.getLoading(state),
+  );
+
+  //useEffect as ComponentDidMount
+  useEffect(() => {
+    dispatch(operationContacts.fetchContacts());
+  }, [dispatch]);
+
+  return (
+    <>
+      <Title title="Phonebook" />
+      <ContactForm />
+      {contacts.length > 0 && <Title title="Contacts" />}
+      {contacts.length > 1 && <Filter />}
+      <ContactList />
+      {isloadingContacts && <Spinner />}
+    </>
+  );
 }
-
-const mapStateToProps = state => ({
-  contacts: selectorsContacts.getAllContacts(state),
-  isloadingContacts: selectorsContacts.getLoading(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchAllContacts: () => dispatch(operationContacts.fetchContacts()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsPage);
